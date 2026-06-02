@@ -6,8 +6,18 @@ const db      = require('../db');
 // Retorna todos os clientes ordenados por nome.
 // Colunas esperadas: id_cliente, nome, email, telefone, saldo_creditos, data_cadastro
 router.get('/', async (req, res) => {
-    // TODO: Consultar a tabela 'clientes' e retornar como JSON
-    res.status(501).json({ error: 'Rota não implementada. Execute schema.sql e seed.sql primeiro.' });
+    try {
+        const [rows] = await db.query(`
+            SELECT *
+            FROM clientes
+            ORDER BY nome
+        `);
+
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // GET /api/clientes/ranking
@@ -15,25 +25,71 @@ router.get('/', async (req, res) => {
 // Depende da view: vw_ranking_clientes
 // Colunas esperadas: id_cliente, nome, total_sessoes, total_gasto, gasto_medio
 router.get('/ranking', async (req, res) => {
-    // TODO: Consultar a view 'vw_ranking_clientes' e retornar como JSON
-    res.status(501).json({ error: 'Rota não implementada. Crie a view vw_ranking_clientes em procedures.sql.' });
-});
+    try {
+        const [rows] = await db.query(`
+            SELECT *
+            FROM vw_ranking_clientes
+        `);
 
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
 // GET /api/clientes/:id
 // Retorna um cliente pelo id.
 router.get('/:id', async (req, res) => {
-    // TODO: Consultar a tabela 'clientes' filtrando pelo id e retornar o objeto (ou 404 se não encontrar)
-    res.status(501).json({ error: 'Rota não implementada.' });
-});
+    try {
+        const { id } = req.params;
 
+        const [rows] = await db.query(
+            'SELECT * FROM clientes WHERE id_cliente = ?',
+            [id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                error: 'Cliente não encontrado.'
+            });
+        }
+
+        res.json(rows[0]);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
 // POST /api/clientes
 // Cadastra um novo cliente.
 // Body esperado: { nome, email, telefone }
 router.post('/', async (req, res) => {
-    const { nome, email, telefone } = req.body;
-    if (!nome || !email) return res.status(400).json({ error: 'Nome e e-mail são obrigatórios.' });
-    // TODO: Inserir na tabela 'clientes' e retornar { id: insertId, message: '...' }
-    res.status(501).json({ error: 'Rota não implementada.' });
+    try {
+        const { nome, email, telefone } = req.body;
+
+        if (!nome || !email) {
+            return res.status(400).json({
+                error: 'Nome e e-mail são obrigatórios.'
+            });
+        }
+
+        const [result] = await db.query(
+            `INSERT INTO clientes
+            (nome, email, telefone)
+            VALUES (?, ?, ?)`,
+            [nome, email, telefone]
+        );
+
+        res.status(201).json({
+            id: result.insertId,
+            message: 'Cliente cadastrado com sucesso.'
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
 module.exports = router;
