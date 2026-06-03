@@ -10,7 +10,7 @@ USE arena_gamer;
 DELIMITER //
 
 -- ──────────────────────────────────────────────
---  FUNCTIONS (AULA 3)
+--  FUNCTIONS (AULA 3)  
 -- ──────────────────────────────────────────────
 
 -- TODO: Aula 3 - Implementar fn_duracao_minutos
@@ -49,12 +49,12 @@ END //
 --  STORED PROCEDURES (AULA 3)
 -- ──────────────────────────────────────────────
 
--- TODO: Aula 3 - Implementar sp_abrir_sessao
--- Recebe p_id_cliente INT, p_id_computador INT
--- Regras de negócio:
+-- TODO: Aula 3 - Implementar sp_abrir_sessao 
+-- Recebe p_id_cliente INT, p_id_computador INT 
+-- Regras de negócio: 
 -- 1. Verificar se o computador está 'disponivel'.
 --    Se não estiver, lançar erro (SIGNAL SQLSTATE '45000') com a mensagem: 'Computador não está disponível.'
--- 2. Se estiver disponível, iniciar transação (START TRANSACTION):
+-- 2. Se estiver disponível, iniciar transação (START TRANSACTION): 
 --    a. Inserir a nova sessão na tabela 'sessoes'
 --    b. Atualizar o status do computador para 'ocupado'
 --    c. Confirmar transação (COMMIT)
