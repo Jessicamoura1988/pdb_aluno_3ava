@@ -19,13 +19,8 @@ Professor: Francisco Eriberto
 ## Equipe
 
 - Clebson Alves De Lima
-  - M: 2025200164
-    
-- Jessica Natália Teófilo da S. de Moura
-   - M: 2025202911
-    
+- Jessica Natália Teófilo da S. de Moura 
 - Geovani Emanuel de Souza
-  - M: 2025199155
 
 ---
 
